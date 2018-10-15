@@ -28,7 +28,6 @@ CUDNN_VERSION="7.3"
 CUDNN_TAR_FILE="cudnn-${VERSION}-${CUDNN_VERSION}.tgz"
 wget http://lia.epfl.ch/dependencies/${CUDNN_TAR_FILE} -O /tmp/${CUDNN_TAR_FILE}
 tar -xzvf /tmp/${CUDNN_TAR_FILE}  -C /tmp/
-#mkdir /usr/local/cuda-${VERSION}
 mkdir -p /usr/local/cuda-${VERSION}/lib64
 
 cp -P /tmp/cuda/include/cudnn.h /usr/local/cuda-${VERSION}/include
@@ -50,19 +49,9 @@ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py --force-reinstall
 '
 
-# 
-'
-git clone --recursive https://github.com/pytorch/pytorch 
-cd pytorch
-git checkout 2b2d56d8460d335daf5aa79774442a111d424f90
-git submodule update --init
-git submodule update --recursive
-python3 setup.py install
-'
-
-# or
-git clone --recursive https://github.com/pytorch/pytorch 
-cd pytorch
+# pytorch
+git clone --recursive https://github.com/pytorch/pytorch /tmp/pytorch
+cd /tmp/pytorch
 git checkout tags/v1.0rc1
 git submodule update --init
 git submodule update --recursive
@@ -70,45 +59,38 @@ python3 setup.py install
 
 yes | pip3 install torchvision
 
-git clone https://github.com/epfml/sent2vec.git
-cd sent2vec
+git clone https://github.com/epfml/sent2vec.git /tmp/sent2vec
+cd /tmp/sent2vec
 make
 cd src
 python3 setup.py build_ext
 pip3 install .
 
-git clone -b dev https://github.com/Diego999/sumy
-cd sumy
+git clone -b dev https://github.com/Diego999/sumy /tmp/sumy
+cd /tmp/sumy
 python3 setup.py install
 
-git clone https://github.com/Diego999/text_histogram.git
-cd text_histogram
+git clone https://github.com/Diego999/text_histogram.git /tmp/text_histogram
+cd /tmp/text_histogram
 python3 setup.py install
 
+# TO DO LDAP USER !
 jupyter notebook --allow-root --generate-config
 echo "c.NotebookApp.ip = '*'" >> /root/.jupyter/jupyter_notebook_config.py
 echo "c.NotebookApp.open_browser = False" >> /root/.jupyter/jupyter_notebook_config.py
+# TO DO
 
-echo "export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}" >> ~/.profile
-echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/" >> ~/.profile
-echo "export CPATH=/usr/local/cuda/include/${CPATH:+:${CPATH}}" >> ~/.profile 
-source ~/.profile
+echo "export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}" >> /etc/environment
+echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64/" >> /etc/environment
+echo "export CPATH=/usr/local/cuda/include/${CPATH:+:${CPATH}}" >> /etc/environment
 
-cd ~
-echo "export DISPLAY=:0.0" >> ~/.bashrc
-echo "export MYSQL_USER='root'" >> ~/.bashrc
-echo "export MYSQL_PASSWORD=''" >> ~/.bashrc
-echo "export OMP_NUM_THREADS='1'" >> ~/.bashrc
-echo "ulimit -n 64000" >> .bashrc
+echo "export DISPLAY=:0.0" >> /etc/environment 
+echo "export MYSQL_USER='root'" >> /etc/environment
+echo "export MYSQL_PASSWORD=''" >> /etc/environment
+echo "export OMP_NUM_THREADS='1'" >> /etc/environment
+source /etc/environment
 
-echo "export DISPLAY=:0.0" >> ~/.profile
-echo "export MYSQL_USER='root'" >> ~/.profile
-echo "export MYSQL_PASSWORD=''" >> ~/.profile
-echo "export OMP_NUM_THREADS='1'" >> ~/.profile
-echo "ulimit -n 64000" >> .profile
-
-source ~/.bashrc
-source ~/.profile
+echo "* hard nofile 64000" >> /etc/security/limits.conf 
 
 echo "vm.swappiness=1" >> /etc/sysctl.conf
 
@@ -127,23 +109,10 @@ rm WordNet-2.0.exc.db # only if exist
 ln -s WordNet-2.0-Exceptions/WordNet-2.0.exc.db WordNet-2.0.exc.db
 '
 
-# clean up
-cd /home
-rm -r ./downloads
-
 # Install dropbox
 #cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 #~/.dropbox-dist/dropboxd
+mysql -u root -D mysql -e "UPDATE user SET plugin='mysql_native_password' WHERE User='root'"
+mysql -u root -D mysql -e "FLUSH PRIVILEGES;"
 
-'
-# If we let the default password
-sudo mysql -u root # I had to use "sudo" since is new installation
-
-USE mysql;
-UPDATE user SET plugin='mysql_native_password' WHERE User='root';
-FLUSH PRIVILEGES;
-exit;
-
-service mysql restart
-'
 
