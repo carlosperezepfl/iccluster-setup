@@ -48,10 +48,10 @@ python3 -c "import nltk; nltk.download('punkt')"
 # the wheel is here: http://lia.epfl.ch/dependencies/tensorflow-1.11.0rc1-cp37-cp37m-linux_x86_64.whl
 
 # If pip is broken afterwrads
-'
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3 get-pip.py --force-reinstall
-'
+#'
+#curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+#python3 get-pip.py --force-reinstall
+#'
 
 # pytorch
 git clone --recursive https://github.com/pytorch/pytorch /tmp/pytorch
@@ -104,19 +104,17 @@ echo "vm.swappiness=1" >> /etc/sysctl.conf
 #exit
 
 # Fix if bug with wordnet
-'
-cd data/WordNet-2.0-Exceptions/
-rm WordNet-2.0.exc.db # only if exist
-./buildExeptionDB.pl . exc WordNet-2.0.exc.db
-cd ../
-rm WordNet-2.0.exc.db # only if exist
-ln -s WordNet-2.0-Exceptions/WordNet-2.0.exc.db WordNet-2.0.exc.db
-'
+#'
+#cd data/WordNet-2.0-Exceptions/
+#rm WordNet-2.0.exc.db # only if exist
+#./buildExeptionDB.pl . exc WordNet-2.0.exc.db
+#cd ../
+#rm WordNet-2.0.exc.db # only if exist
+#ln -s WordNet-2.0-Exceptions/WordNet-2.0.exc.db WordNet-2.0.exc.db
+#'
 
 # Install dropbox
 #cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
 #~/.dropbox-dist/dropboxd
 mysql -u root -D mysql -e "UPDATE user SET plugin='mysql_native_password' WHERE User='root'"
 mysql -u root -D mysql -e "FLUSH PRIVILEGES;"
-
-
