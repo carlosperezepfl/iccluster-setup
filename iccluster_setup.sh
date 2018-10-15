@@ -17,7 +17,9 @@ VERSION="10.0"
 SUB_VERSION="130"
 SUB_SUB_VERSION="1"
 CUDA_TAR_FILE="cuda-${VERSION}.${SUB_VERSION}-${SUB_SUB_VERSION}.deb"
-wget http://lia.epfl.ch/dependencies/${CUDA_TAR_FILE} -O /tmp/${CUDA_TAR_FILE}
+#HTTP request sent, awaiting response... 302 Found
+#Location: https://lia.epfl.ch/dependencies/...
+wget https://lia.epfl.ch/dependencies/${CUDA_TAR_FILE} -O /tmp/${CUDA_TAR_FILE}
 apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
 dpkg -i /tmp/${CUDA_TAR_FILE}
 apt-get update
@@ -26,7 +28,9 @@ apt-get install cuda=${VERSION}.${SUB_VERSION}-${SUB_SUB_VERSION} -y
 # download and install libcudnn
 CUDNN_VERSION="7.3"
 CUDNN_TAR_FILE="cudnn-${VERSION}-${CUDNN_VERSION}.tgz"
-wget http://lia.epfl.ch/dependencies/${CUDNN_TAR_FILE} -O /tmp/${CUDNN_TAR_FILE}
+#HTTP request sent, awaiting response... 302 Found
+#Location: https://lia.epfl.ch/dependencies/...
+wget https://lia.epfl.ch/dependencies/${CUDNN_TAR_FILE} -O /tmp/${CUDNN_TAR_FILE}
 tar -xzvf /tmp/${CUDNN_TAR_FILE}  -C /tmp/
 mkdir -p /usr/local/cuda-${VERSION}/lib64
 
